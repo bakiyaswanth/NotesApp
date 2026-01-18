@@ -14,6 +14,12 @@ namespace NotesApi.Controllers
 
         public AppController(MongoService db) => _db = db;
 
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok(new { message = "API is working!", timestamp = DateTime.UtcNow });
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserDto req)
         {

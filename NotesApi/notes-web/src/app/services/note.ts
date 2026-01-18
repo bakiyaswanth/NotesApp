@@ -8,10 +8,10 @@ export class NoteService {
 
   // API URL - automatically detects environment
   // For local dev: uses localhost
-  // For production: uses your deployed backend at MonsterASP.NET
+  // For production: uses HTTPS backend URL
   private apiUrl = (typeof window !== 'undefined' && window.location.hostname === 'localhost') 
     ? 'http://localhost:5145/api/app'  // Local development
-    : 'http://mynotesapp.runasp.net/api/app';  // Production
+    : 'https://mynotesapp.runasp.net/api/app';  // Production - HTTPS backend
 
   login(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, data);
