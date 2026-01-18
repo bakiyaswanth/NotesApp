@@ -1,1 +1,5 @@
+# Proxy API requests to backend (bypasses CORS)
+/api/*  https://mynotesapp.runasp.net/api/:splat  200
+
+# SPA routing
 /*    /index.html   200

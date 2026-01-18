@@ -1,4 +1,9 @@
-﻿using NotesApi.Services;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using NotesApi.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,22 +18,18 @@ builder.Logging.AddDebug();
 // Services
 // ----------------------
 builder.Services.AddControllers();
-builder.Services.AddSingleton<MongoService>(); // MongoDB service
+builder.Services.AddSingleton<MongoService>();
 
 // ----------------------
-// CORS
+// CORS - PERMISSIVE FOR SHARED HOSTING
 // ----------------------
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins(
-                "https://ui-notesapp.netlify.app", // Production frontend
-                "http://localhost:4200"            // Local Angular dev server
-            )
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-        // .AllowCredentials(); // Uncomment if using cookies/JWT
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
 
@@ -40,15 +41,35 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// ----------------------
-// Middleware
-// ----------------------
-app.UseCors("AllowFrontend");   // Must be FIRST
-app.UseHttpsRedirection();      // Redirect HTTP → HTTPS
-// app.UseAuthorization();      // Only if you use [Authorize]
+// ═══════════════════════════════════════════════════════════════════════
+// CRITICAL #1: HANDLE OPTIONS PREFLIGHT FIRST (BEFORE ANY OTHER MIDDLEWARE)
+// This catches 405 errors from IIS/shared hosting
+// ═══════════════════════════════════════════════════════════════════════
+app.Use(async (context, next) =>
+{
+    if (context.Request.Method == "OPTIONS")
+    {
+        context.Response.StatusCode = 204; // No Content (standard for preflight)
+
+        context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
+        context.Response.Headers.Append("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        context.Response.Headers.Append("Access-Control-Allow-Headers", "*");
+        context.Response.Headers.Append("Access-Control-Max-Age", "86400"); // 24hr cache
+
+        await context.Response.CompleteAsync();
+        return;
+    }
+    await next();
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// CRITICAL #2: CORS POLICY (for non-preflight requests)
+// ═══════════════════════════════════════════════════════════════════════
+app.UseCors("AllowAll");
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
@@ -57,35 +78,27 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// ----------------------
-// Routes
-// ----------------------
+app.UseHttpsRedirection();
 app.MapControllers();
 
+// ----------------------
 // Health check endpoint
+// ----------------------
 app.MapGet("/", () => new
 {
-    status = "online",
-    message = "Notes API is running",
-    endpoints = new
-    {
-        register = "/api/app/register",
-        login = "/api/app/login",
-        notes = "/api/app/notes",
-        swagger = "/swagger"
-    }
+    status = "online ✅",
+    message = "Notes API running - CORS + OPTIONS PREFLIGHT FIXED",
+    endpoints = new[] { "/api/app/register", "/api/app/login", "/api/app/notes", "/swagger" },
+    corsStatus = "✅ Preflight handler active"
 });
 
 // ----------------------
-// Optional: Dynamic port for hosting (Docker, Render, Railway)
+// Dynamic port for hosting platforms
 // ----------------------
 var port = Environment.GetEnvironmentVariable("PORT");
-if (!string.IsNullOrEmpty(port))
+if (!string.IsNullOrEmpty(port) && int.TryParse(port, out var portNumber))
 {
-    app.Urls.Add($"http://0.0.0.0:{port}");
+    app.Urls.Add($"http://0.0.0.0:{portNumber}");
 }
 
-// ----------------------
-// Run
-// ----------------------
 app.Run();

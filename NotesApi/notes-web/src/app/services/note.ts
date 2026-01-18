@@ -8,11 +8,10 @@ export class NoteService {
 
   // API URL - automatically detects environment
   // For local dev: uses localhost
-  // For production: uses Netlify proxy (works until SSL is active on backend)
-  // Once SSL is active, change to: 'https://mynotesapp.runasp.net/api/app'
-  private apiUrl = (typeof window !== 'undefined' && window.location.hostname === 'localhost') 
+  // For production: uses Netlify proxy to bypass CORS
+  private apiUrl = (typeof window !== 'undefined' && window.location.hostname === 'localhost')
     ? 'http://localhost:5145/api/app'  // Local development
-    : 'https://mynotesapp.runasp.net/api/app';  // Production - uses Netlify proxy to avoid SSL issues
+    : '/api/app';  // Production - proxied through Netlify to bypass CORS
 
   login(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, data);
