@@ -51,7 +51,6 @@
   box-sizing: border-box;
   outline: none;
   transition: border-color 0.2s;
-  text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 600;
 }
