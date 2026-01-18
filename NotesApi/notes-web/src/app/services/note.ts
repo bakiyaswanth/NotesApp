@@ -6,10 +6,12 @@ import { Observable } from 'rxjs';
 export class NoteService {
   private http = inject(HttpClient);
 
-  // API URL - uses relative path when deployed with nginx proxy
-  // For local dev: 'http://localhost:5145/api/app'
-  // For Docker deployment, nginx proxies /api to backend
-  private apiUrl = 'http://localhost:5145/api/app';
+  // API URL - automatically detects environment
+  // For local dev: uses localhost
+  // For production: uses your deployed backend at MonsterASP.NET
+  private apiUrl = (typeof window !== 'undefined' && window.location.hostname === 'localhost') 
+    ? 'http://localhost:5145/api/app'  // Local development
+    : 'http://mynotesapp.runasp.net/api/app';  // Production
 
   login(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, data);
