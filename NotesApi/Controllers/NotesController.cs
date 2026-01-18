@@ -25,7 +25,7 @@ namespace NotesApi.Controllers
         {
             var hash = BCrypt.Net.BCrypt.HashPassword(req.Password);
             await _db.Users.InsertOneAsync(new User { Username = req.Username, PasswordHash = hash });
-            return Ok("User created");
+            return Ok(new { message = "User created" });
         }
 
         [HttpPost("login")]
@@ -33,7 +33,7 @@ namespace NotesApi.Controllers
         {
             var user = await _db.Users.Find(u => u.Username == req.Username).FirstOrDefaultAsync();
             if (user == null || !BCrypt.Net.BCrypt.Verify(req.Password, user.PasswordHash))
-                return Unauthorized("Invalid credentials");
+                return Unauthorized(new { error = "Invalid credentials" });
 
             // Return UserID (In real app, return JWT Token here)
             return Ok(new { UserId = user.Id });

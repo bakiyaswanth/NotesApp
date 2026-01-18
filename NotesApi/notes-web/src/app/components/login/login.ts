@@ -48,6 +48,12 @@ export class LoginComponent {
 
   handleRegister() {
     this.noteService.register({ username: this.username, password: this.password })
-      .subscribe(() => alert('Account created. Please login.'));
+      .subscribe({
+        next: () => alert('Account created. Please login.'),
+        error: (err) => {
+          console.error('Registration error:', err);
+          alert('Registration failed: ' + (err.error?.message || err.message || 'Unknown error'));
+        }
+      });
   }
 }
