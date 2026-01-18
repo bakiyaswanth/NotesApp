@@ -2,6 +2,11 @@ using NotesApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 // Add Services
 builder.Services.AddControllers();
 builder.Services.AddSingleton<MongoService>(); // Register Mongo
@@ -27,7 +32,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 app.MapControllers();
-// Use PORT environment variable if available (for Render/Railway)
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Urls.Add($"http://0.0.0.0:{port}");
+
+// Port configuration - only set if PORT env variable exists (for Docker/Render/Railway)
+// For IIS/hosting providers, let them handle the port
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+{
+    app.Urls.Add($"http://0.0.0.0:{port}");
+}
+
 app.Run();
