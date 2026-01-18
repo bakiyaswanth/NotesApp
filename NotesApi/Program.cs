@@ -12,8 +12,13 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<MongoService>(); // Register Mongo
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .WithExposedHeaders("*"); // Expose all headers
+    });
 });
 
 // Add Swagger/OpenAPI
@@ -21,6 +26,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// CORS MUST be FIRST - before any other middleware
+app.UseCors("AllowAll");
 
 // Configure Swagger - Enable in all environments for API documentation
 app.UseSwagger();
@@ -30,27 +38,10 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
-// Enable HTTPS redirection in all environments
+// HTTPS redirection (after CORS)
 app.UseHttpsRedirection();
 
-// CORS must be before MapControllers
-app.UseCors("AllowAll");
-
-// Handle preflight OPTIONS requests
-app.Use(async (context, next) =>
-{
-    if (context.Request.Method == "OPTIONS")
-    {
-        context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-        context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        context.Response.StatusCode = 200;
-        await context.Response.WriteAsync(string.Empty);
-        return;
-    }
-    await next();
-});
-
+// Map controllers
 app.MapControllers();
 
 // Health check endpoint
