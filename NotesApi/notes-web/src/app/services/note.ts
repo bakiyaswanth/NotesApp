@@ -12,7 +12,7 @@ export class NoteService {
   // Once SSL is active, change to: 'https://mynotesapp.runasp.net/api/app'
   private apiUrl = (typeof window !== 'undefined' && window.location.hostname === 'localhost') 
     ? 'http://localhost:5145/api/app'  // Local development
-    : '/api/app';  // Production - uses Netlify proxy to avoid SSL issues
+    : 'https://mynotesapp.runasp.net/api/app';  // Production - uses Netlify proxy to avoid SSL issues
 
   login(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, data);
