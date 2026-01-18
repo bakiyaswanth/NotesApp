@@ -1,0 +1,22 @@
+[build]
+  # Base directory for the build (relative to repository root)
+  # This tells Netlify to look in the notes-web subdirectory
+  base = "notes-web"
+  
+  # Build command - install dependencies and build Angular app
+  command = "npm install && npm run build"
+  
+  # Directory to publish (output directory after build)
+  # Angular outputs to dist/notes-web/browser
+  publish = "dist/notes-web/browser"
+
+# Redirect all routes to index.html for Angular routing (SPA)
+# This ensures Angular routes work on refresh
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Optional: Set Node version (Netlify will auto-detect, but you can specify)
+# [build.environment]
+#   NODE_VERSION = "20"
