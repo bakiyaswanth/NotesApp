@@ -1,5 +1,6 @@
-# Proxy API requests to backend (bypasses CORS)
-/api/*  https://mynotesapp.runasp.net/api/:splat  200
+# Proxy API requests to backend (MUST come before SPA fallback)
+# 200! forces proxy even when a local file exists
+/api/*  https://mynotesapp.runasp.net/api/:splat  200!
 
-# SPA routing
+# SPA routing (catch-all for Angular routes)
 /*    /index.html   200
