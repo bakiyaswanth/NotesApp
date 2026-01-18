@@ -3,12 +3,22 @@
   # Your Angular app is in NotesApi/notes-web
   base = "NotesApi/notes-web"
   
-  # Build command - install dependencies and build Angular app
-  command = "npm install && npm run build"
+  # Build command - build Angular app as static site (browser only, no SSR)
+  # The --output-hashing=all ensures proper cache busting
+  command = "npm install && npm run build -- --output-hashing=all"
   
   # Directory to publish (output directory after build)
   # Angular outputs to dist/notes-web/browser
   publish = "dist/notes-web/browser"
+
+# Configure Angular plugin to disable SSR (build static site only)
+[[plugins]]
+  package = "@netlify/angular-runtime"
+  [plugins.inputs]
+    disableSSR = true
+
+# Alternative: If plugin still causes issues, you can disable it in Netlify Dashboard
+# Go to: Site settings → Build & deploy → Build plugins → Remove @netlify/angular-runtime
 
 # Redirect all routes to index.html for Angular routing (SPA)
 # This ensures Angular routes work on refresh
