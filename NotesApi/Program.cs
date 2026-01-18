@@ -27,5 +27,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 app.MapControllers();
-
+// Use PORT environment variable if available (for Render/Railway)
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://0.0.0.0:{port}");
 app.Run();
