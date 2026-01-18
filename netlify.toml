@@ -11,14 +11,10 @@
   # Angular outputs to dist/notes-web/browser
   publish = "dist/notes-web/browser"
 
-# Configure Angular plugin to disable SSR (build static site only)
-[[plugins]]
-  package = "@netlify/angular-runtime"
-  [plugins.inputs]
-    disableSSR = true
-
-# Alternative: If plugin still causes issues, you can disable it in Netlify Dashboard
-# Go to: Site settings → Build & deploy → Build plugins → Remove @netlify/angular-runtime
+# Note: Angular plugin is auto-detected by Netlify
+# Since we're building a static site (outputMode: "static" in angular.json),
+# the plugin should work correctly. If it causes issues, disable it in Netlify Dashboard:
+# Site settings → Build & deploy → Build plugins → Remove @netlify/angular-runtime
 
 # Redirect all routes to index.html for Angular routing (SPA)
 # This ensures Angular routes work on refresh
