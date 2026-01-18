@@ -1,54 +1,74 @@
-using NotesApi.Services;
+﻿using NotesApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add logging
+// ----------------------
+// Logging
+// ----------------------
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
-// Add Services
+// ----------------------
+// Services
+// ----------------------
 builder.Services.AddControllers();
-builder.Services.AddSingleton<MongoService>(); // Register Mongo
+builder.Services.AddSingleton<MongoService>(); // MongoDB service
+
+// ----------------------
+// CORS
+// ----------------------
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .WithExposedHeaders("*"); // Expose all headers
+        policy.WithOrigins(
+                "https://ui-notesapp.netlify.app", // Production frontend
+                "http://localhost:4200"            // Local Angular dev server
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        // .AllowCredentials(); // Uncomment if using cookies/JWT
     });
 });
 
-// Add Swagger/OpenAPI
+// ----------------------
+// Swagger / OpenAPI
+// ----------------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// CORS MUST be FIRST - before any other middleware
-app.UseCors("AllowAll");
+// ----------------------
+// Middleware
+// ----------------------
+app.UseCors("AllowFrontend");   // Must be FIRST
+app.UseHttpsRedirection();      // Redirect HTTP → HTTPS
+// app.UseAuthorization();      // Only if you use [Authorize]
 
-// Configure Swagger - Enable in all environments for API documentation
-app.UseSwagger();
-app.UseSwaggerUI(c => 
+if (app.Environment.IsDevelopment())
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notes API v1");
-    c.RoutePrefix = "swagger";
-});
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notes API v1");
+        c.RoutePrefix = "swagger";
+    });
+}
 
-// HTTPS redirection (after CORS)
-app.UseHttpsRedirection();
-
-// Map controllers
+// ----------------------
+// Routes
+// ----------------------
 app.MapControllers();
 
 // Health check endpoint
-app.MapGet("/", () => new { 
-    status = "online", 
+app.MapGet("/", () => new
+{
+    status = "online",
     message = "Notes API is running",
-    endpoints = new {
+    endpoints = new
+    {
         register = "/api/app/register",
         login = "/api/app/login",
         notes = "/api/app/notes",
@@ -56,12 +76,16 @@ app.MapGet("/", () => new {
     }
 });
 
-// Port configuration - only set if PORT env variable exists (for Docker/Render/Railway)
-// For IIS/hosting providers, let them handle the port
+// ----------------------
+// Optional: Dynamic port for hosting (Docker, Render, Railway)
+// ----------------------
 var port = Environment.GetEnvironmentVariable("PORT");
 if (!string.IsNullOrEmpty(port))
 {
     app.Urls.Add($"http://0.0.0.0:{port}");
 }
 
+// ----------------------
+// Run
+// ----------------------
 app.Run();
