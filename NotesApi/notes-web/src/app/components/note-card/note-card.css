@@ -129,3 +129,52 @@
 .edit-textarea:focus {
   border-color: #fff;
 }
+
+/* Responsive - Mobile */
+@media (max-width: 480px) {
+  .note-card {
+    padding: 16px;
+    min-height: 140px;
+  }
+
+  .note-card:hover {
+    transform: none;
+  }
+
+  .card-header {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  .card-title-section h3 {
+    font-size: 1rem;
+  }
+
+  .date {
+    font-size: 0.65rem;
+  }
+
+  .card-actions {
+    opacity: 1;
+    /* Always visible on mobile */
+  }
+
+  .btn-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .note-content {
+    font-size: 0.9rem;
+  }
+
+  .edit-input {
+    font-size: 0.95rem;
+  }
+
+  .edit-textarea {
+    font-size: 0.9rem;
+    min-height: 60px;
+  }
+}

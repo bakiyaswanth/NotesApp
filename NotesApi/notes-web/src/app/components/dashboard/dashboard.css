@@ -150,3 +150,110 @@
   margin: 0;
   text-transform: uppercase;
 }
+
+/* Responsive - Tablet */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 24px 16px;
+  }
+
+  .top-bar {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+  }
+
+  .brand-title {
+    font-size: 1.5rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+  }
+
+  .logout-btn {
+    padding: 8px 16px;
+    font-size: 0.75rem;
+  }
+
+  .create-card {
+    padding: 24px;
+  }
+
+  .create-area {
+    margin-bottom: 40px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 16px 12px;
+  }
+
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .brand-title {
+    font-size: 1.3rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.6rem;
+  }
+
+  .logout-btn {
+    align-self: flex-end;
+    margin-top: -40px;
+  }
+
+  .create-card {
+    padding: 20px 16px;
+  }
+
+  .input-title {
+    font-size: 1.1rem;
+    padding: 10px 0;
+  }
+
+  .input-content {
+    font-size: 0.9rem;
+  }
+
+  .add-btn {
+    width: 100%;
+    padding: 14px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .section-title {
+    font-size: 0.75rem;
+    margin-bottom: 16px;
+  }
+
+  .empty-state {
+    padding: 60px 16px;
+  }
+
+  .empty-text {
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+
+  .empty-subtext {
+    font-size: 0.75rem;
+  }
+}
