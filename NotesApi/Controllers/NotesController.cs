@@ -20,12 +20,21 @@ namespace NotesApi.Controllers
             return Ok(new { message = "API is working!", timestamp = DateTime.UtcNow });
         }
 
+        [HttpGet("check-user/{username}")]
+        public async Task<IActionResult> CheckUser(string username)
+        {
+            var user = await _db.Users.Find(u => u.Username == username).FirstOrDefaultAsync();
+            return Ok(new { exists = user != null });
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserDto req)
         {
+            Console.WriteLine($"[BACKEND] Registering user: {req.Username}");
             var hash = BCrypt.Net.BCrypt.HashPassword(req.Password);
-            await _db.Users.InsertOneAsync(new User { Username = req.Username, PasswordHash = hash });
-            return Ok(new { message = "User created" });
+            var newUser = new User { Username = req.Username, PasswordHash = hash };
+            await _db.Users.InsertOneAsync(newUser);
+            return Ok(new { message = "User created", userId = newUser.Id });
         }
 
         [HttpPost("login")]

@@ -104,3 +104,18 @@
   border-color: #fff;
   color: #fff;
 }
+
+.welcome-text {
+  color: #888;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  margin: 0 0 20px 0;
+  text-transform: uppercase;
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
