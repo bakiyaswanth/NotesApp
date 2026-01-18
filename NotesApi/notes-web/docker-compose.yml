@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # .NET 8 Backend API
+  api:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: notes-api
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - ConnectionStrings__MongoDb=${MONGO_CONNECTION_STRING:-mongodb+srv://bakiyaswanth_db_user:U0wL8ShDdfQRNgtJ@cluster0.qxnwz8c.mongodb.net/?appName=Cluster0}
+    networks:
+      - notes-network
+    restart: unless-stopped
+
+  # Angular Frontend
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: notes-web
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    networks:
+      - notes-network
+    restart: unless-stopped
+
+networks:
+  notes-network:
+    driver: bridge

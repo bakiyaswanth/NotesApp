@@ -1,0 +1,45 @@
+<div class="dashboard-container">
+  <header class="top-bar">
+    <div class="brand-section">
+      <h1 class="brand-title">NOTES</h1>
+      <p class="brand-subtitle">MINIMALIST WORKSPACE</p>
+    </div>
+    <button (click)="logout()" class="logout-btn">LOGOUT</button>
+  </header>
+
+  <section class="create-area">
+    <div class="create-card">
+      <input 
+        [(ngModel)]="title" 
+        placeholder="TITLE" 
+        class="input-title"
+        (keyup.enter)="addNote()"
+      />
+      <textarea 
+        [(ngModel)]="content" 
+        placeholder="WRITE YOUR THOUGHTS HERE..." 
+        rows="4"
+        class="input-content"
+      ></textarea>
+      <button (click)="addNote()" class="btn-primary add-btn">
+        CREATE NOTE +
+      </button>
+    </div>
+  </section>
+
+  <div class="notes-section">
+    <h2 class="section-title" *ngIf="notes.length > 0">{{ notes.length }} NOTE{{ notes.length > 1 ? 'S' : '' }}</h2>
+    <div class="grid" *ngIf="notes.length > 0">
+      <app-note-card 
+        *ngFor="let note of notes" 
+        [note]="note"
+        (noteDeleted)="handleNoteDeleted($event)"
+        (noteUpdated)="loadNotes()"
+      ></app-note-card>
+    </div>
+    <div class="empty-state" *ngIf="notes.length === 0">
+      <p class="empty-text">NO NOTES YET</p>
+      <p class="empty-subtext">CREATE YOUR FIRST NOTE ABOVE</p>
+    </div>
+  </div>
+</div>

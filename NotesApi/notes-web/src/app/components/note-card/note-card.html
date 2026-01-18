@@ -1,0 +1,31 @@
+<div class="note-card">
+  <div class="card-header">
+    <div class="card-title-section">
+      <h3 *ngIf="!isEditing">{{ note.title || 'UNTITLED' }}</h3>
+      <input 
+        *ngIf="isEditing" 
+        [(ngModel)]="editTitle" 
+        class="edit-input"
+        placeholder="TITLE"
+      />
+      <span class="date">{{ note.createdAt | date:'MMM d, y' }}</span>
+    </div>
+    <div class="card-actions">
+      <button *ngIf="!isEditing" (click)="startEdit()" class="btn-icon" title="Edit">✎</button>
+      <button *ngIf="isEditing" (click)="saveEdit()" class="btn-icon save" title="Save">✓</button>
+      <button *ngIf="isEditing" (click)="cancelEdit()" class="btn-icon cancel" title="Cancel">✕</button>
+      <button (click)="deleteNote()" class="btn-icon delete" title="Delete">🗑</button>
+    </div>
+  </div>
+  
+  <div class="card-body">
+    <p *ngIf="!isEditing" class="note-content">{{ note.content || 'No content' }}</p>
+    <textarea 
+      *ngIf="isEditing" 
+      [(ngModel)]="editContent" 
+      class="edit-textarea"
+      placeholder="CONTENT"
+      rows="4"
+    ></textarea>
+  </div>
+</div>

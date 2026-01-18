@@ -1,0 +1,133 @@
+.note-card {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  padding: 24px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.note-card:hover {
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.card-title-section {
+  flex: 1;
+}
+
+.card-title-section h3 {
+  margin: 0 0 6px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.date {
+  font-size: 0.7rem;
+  color: #666;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.note-card:hover .card-actions {
+  opacity: 1;
+}
+
+.btn-icon {
+  background: transparent;
+  border: 1px solid #333;
+  color: #888;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.btn-icon:hover {
+  border-color: #fff;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.btn-icon.save:hover {
+  background: #fff;
+  color: #000;
+}
+
+.btn-icon.delete:hover {
+  background: #ff0000;
+  border-color: #ff0000;
+  color: #fff;
+}
+
+.card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.note-content {
+  color: #aaa;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.edit-input,
+.edit-textarea {
+  background: #050505;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 8px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  font-family: inherit;
+}
+
+.edit-input {
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.edit-textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-size: 0.95rem;
+}
+
+.edit-input:focus,
+.edit-textarea:focus {
+  border-color: #fff;
+}
