@@ -16,6 +16,14 @@
 # the plugin should work correctly. If it causes issues, disable it in Netlify Dashboard:
 # Site settings → Build & deploy → Build plugins → Remove @netlify/angular-runtime
 
+# Temporary: Proxy API requests to HTTP backend until SSL is active
+# Once SSL is active on backend, remove this and use direct HTTPS
+[[redirects]]
+  from = "/api/*"
+  to = "http://mynotesapp.runasp.net/api/:splat"
+  status = 200
+  force = true
+
 # Redirect all routes to index.html for Angular routing (SPA)
 # This ensures Angular routes work on refresh
 [[redirects]]
